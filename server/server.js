@@ -87,9 +87,7 @@ Rewrite the text below in a '${tone}' tone.
   }
 });
 
-
-// --- Vercel Export ---
-// Instead of app.listen(), we export the app for Vercel to handle.
-// This is the key change for serverless deployment.
-module.exports = app;
-
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
+});
