@@ -1,5 +1,4 @@
 const express = require('express');
-const cors = require('cors');
 const dotenv = require('dotenv');
 const { AzureOpenAI } = require('openai');
 
@@ -13,7 +12,6 @@ const app = express();
 // --- Azure OpenAI Client Initialization ---
 if (!process.env.AZURE_OPENAI_ENDPOINT || !process.env.AZURE_OPENAI_API_KEY || !process.env.AZURE_OPENAI_DEPLOYMENT_NAME) {
     console.error("FATAL ERROR: Azure OpenAI environment variables are not configured.");
-    // In a serverless function, we might not want to exit the process, but the function will fail.
 }
 
 const client = new AzureOpenAI({
@@ -24,9 +22,23 @@ const client = new AzureOpenAI({
 
 
 // --- Middleware ---
-// Use cors with default settings to allow all origins.
-// This is the fix for the cross-origin request issue.
-app.use(cors());
+// Manual CORS middleware to handle preflight requests explicitly.
+app.use((req, res, next) => {
+  // Allow requests from any origin
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  // Define allowed HTTP methods
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+  // Define allowed headers
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+
+  // If this is a preflight (OPTIONS) request, end the request here with a 204 No Content status.
+  if (req.method === 'OPTIONS') {
+    return res.status(204).end();
+  }
+
+  next();
+});
+
 app.use(express.json());
 
 
