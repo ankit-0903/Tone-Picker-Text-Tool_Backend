@@ -88,7 +88,4 @@ Rewrite the text below in a '${tone}' tone.
 });
 
 
-// --- Start Server ---
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
+module.exports = app;
