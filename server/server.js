@@ -27,10 +27,7 @@ const client = new AzureOpenAI({
     // The deployment name is specified in the actual API call below
 });
 
-
-app.use(cors({
-  origin: process.env.CLIENT_URL 
-}));
+app.use(cors());
 // Parse incoming JSON requests, which is necessary for reading `req.body`
 app.use(express.json());
 
